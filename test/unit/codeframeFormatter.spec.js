@@ -6,7 +6,7 @@ var beforeEach = require('mocha').beforeEach;
 var afterEach = require('mocha').afterEach;
 var expect = require('chai').expect;
 var mockFs = require('mock-fs');
-var NormalizedMessage = require('../../lib/NormalizedMessage');
+var NormalizedMessage = require('../../lib/NormalizedMessage').NormalizedMessage;
 var createCodeframeFormatter = require('../../lib/formatter/codeframeFormatter');
 
 describe('[UNIT] formatter/codeframeFormatter', function () {

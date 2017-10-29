@@ -1,13 +1,13 @@
 
-class WorkSet {
-  workDomain: any[];
+export class WorkSet<T = any> {
+  workDomain: T[];
   workNumber: number;
   workDivision: number;
   workSize: number;
   workBegin: number;
   workEnd: number;
 
-  constructor(workDomain: any[], workNumber: number, workDivision: number) {
+  constructor(workDomain: T[], workNumber: number, workDivision: number) {
     this.workDomain = workDomain;
     this.workNumber = workNumber;
     this.workDivision = workDivision;
@@ -21,11 +21,9 @@ class WorkSet {
     }
   }
 
-  forEach(callback: (workDomainItem: any, index: number) => void) {
+  forEach(callback: (workDomainItem: T, index: number) => void) {
     for (let i = this.workBegin; i < this.workEnd; ++i) {
       callback(this.workDomain[i], i);
     }
   }
 }
-
-export = WorkSet;

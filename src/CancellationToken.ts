@@ -4,15 +4,16 @@ import os = require('os');
 import path = require('path');
 import ts = require('typescript');
 
-interface CancellationTokenData {
+export interface CancellationTokenData {
   isCancelled: boolean;
   cancellationFileName: string;
 }
 
-class CancellationToken {
-  isCancelled: boolean;
-  cancellationFileName: string;
-  lastCancellationCheckTime: number;
+export class CancellationToken {
+  protected isCancelled: boolean;
+  protected cancellationFileName: string;
+  private lastCancellationCheckTime: number;
+
   constructor(cancellationFileName: string, isCancelled: boolean) {
     this.isCancelled = !!isCancelled;
     this.cancellationFileName = cancellationFileName || crypto.randomBytes(64).toString('hex');
@@ -72,5 +73,3 @@ class CancellationToken {
     }
   }
 }
-
-export = CancellationToken;

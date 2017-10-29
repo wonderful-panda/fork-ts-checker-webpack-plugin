@@ -1,10 +1,9 @@
-import Message from './Message';
 
-class WorkResult {
-  workResult: {};
-  workDomain: any[];
+export class WorkResult<T = any> {
+  workResult: { [key: number]: T };
+  workDomain: number[];
 
-  constructor(workDomain: any[]) {
+  constructor(workDomain: number[]) {
     this.workResult = {};
     this.workDomain = workDomain;
   }
@@ -13,7 +12,7 @@ class WorkResult {
     return -1 !== this.workDomain.indexOf(workName);
   }
 
-  set(workName: number, result: any) {
+  set(workName: number, result: T) {
     if (!this.supports(workName)) {
       throw new Error('Cannot set result - work "' + workName + '" is not supported.');
     }
@@ -41,11 +40,9 @@ class WorkResult {
     this.workResult = {};
   }
 
-  reduce(reducer: (m1: Message, m2: Message) => Message, initial: Message) {
+  reduce<R>(reducer: (reduced: R, result: T) => R, initial: R) {
     return this.workDomain.reduce((reduced, workName) => {
       return reducer(reduced, this.workResult[workName]);
     }, initial);
   }
 }
-
-export = WorkResult;

@@ -2,16 +2,12 @@ var describe = require('mocha').describe;
 var it = require('mocha').it;
 var beforeEach = require('mocha').beforeEach;
 var expect = require('chai').expect;
-var FilesRegister = require('../../lib/FilesRegister');
+var FilesRegister = require('../../lib/FilesRegister').FilesRegister;
 
 describe('[UNIT] FilesRegister', function () {
   var register;
   beforeEach(function () {
-    register = new FilesRegister(function () {
-      return {
-        test: true
-      };
-    });
+    register = new FilesRegister();
   });
 
   it('should add and remove files', function () {
@@ -49,7 +45,7 @@ describe('[UNIT] FilesRegister', function () {
 
   it('should get data from file', function () {
     register.add('/test');
-    expect(register.getData('/test')).to.be.deep.equal({ test: true });
+    expect(register.getData('/test')).to.be.deep.equal({ linted: false, lints: [], source: undefined });
     expect(function() { register.getData('/test2'); }).to.throw(Error);
   });
 
@@ -66,12 +62,12 @@ describe('[UNIT] FilesRegister', function () {
   it('should mutate existing data', function () {
     register.add('/test');
     var dataReference = register.getData('/test');
-    expect(dataReference.test).to.be.true;
+    expect(dataReference.linted).to.be.false;
     register.mutateData('/test', function (data) {
-      data.test = false;
+      data.linted = true;
     });
     expect(dataReference).to.be.equal(register.getData('/test'));
-    expect(dataReference.test).to.be.false;
+    expect(dataReference.linted).to.be.true;
   });
 
   it('should set mtime and reset data if mtime changes', function () {
@@ -84,18 +80,18 @@ describe('[UNIT] FilesRegister', function () {
 
     register.setMtime('/test', 1000);
     expect(register.getMtime('/test')).to.be.equal(1000);
-    expect(register.getData('/test').test).to.be.true;
+    expect(register.getData('/test').linted).to.be.false;
     register.mutateData('/test', function (data) {
-      data.test = false;
+      data.linted = true;
     });
-    expect(register.getData('/test').test).to.be.false;
+    expect(register.getData('/test').linted).to.be.true;
 
     register.setMtime('/test', 1000);
     expect(register.getMtime('/test')).to.be.equal(1000);
-    expect(register.getData('/test').test).to.be.false;
+    expect(register.getData('/test').linted).to.be.true;
 
     register.setMtime('/test', 1001);
     expect(register.getMtime('/test')).to.be.equal(1001);
-    expect(register.getData('/test').test).to.be.true;
+    expect(register.getData('/test').linted).to.be.false;
   });
 });

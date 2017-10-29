@@ -1,8 +1,8 @@
 import process = require('process');
 import ts = require('typescript');
-import IncrementalChecker = require('./IncrementalChecker');
-import CancellationToken = require('./CancellationToken');
-import NormalizedMessage = require('./NormalizedMessage');
+import { IncrementalChecker } from './IncrementalChecker';
+import { CancellationToken } from './CancellationToken';
+import { NormalizedMessage } from './NormalizedMessage';
 
 const checker = new IncrementalChecker(
   process.env.TSCONFIG,

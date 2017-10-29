@@ -3,13 +3,13 @@ import endsWith = require('lodash.endswith');
 import path = require('path');
 import ts = require('typescript');
 import tslintTypes = require('tslint'); // Imported for types alone; actual requires take place in methods below
-import FilesRegister = require('./FilesRegister');
-import FilesWatcher = require('./FilesWatcher');
-import WorkSet = require('./WorkSet');
-import NormalizedMessage = require('./NormalizedMessage');
-import CancellationToken = require('./CancellationToken');
+import { FilesRegister } from './FilesRegister';
+import { FilesWatcher } from './FilesWatcher';
+import { WorkSet } from './WorkSet';
+import { NormalizedMessage } from './NormalizedMessage';
+import { CancellationToken } from './CancellationToken';
 
-class IncrementalChecker {
+export class IncrementalChecker {
   programConfigFile: string;
   linterConfigFile: string | false;
   watchPaths: string[];
@@ -41,12 +41,7 @@ class IncrementalChecker {
     this.checkSyntacticErrors = checkSyntacticErrors || false;
 
     // it's shared between compilations
-    this.files = new FilesRegister(() => ({
-        // data shape
-        source: undefined,
-        linted: false,
-        lints: []
-    }));
+    this.files = new FilesRegister();
   }
 
   static loadProgramConfig(configFile: string) {
@@ -58,7 +53,7 @@ class IncrementalChecker {
     );
   }
 
-  static loadLinterConfig(configFile: string) {
+  static loadLinterConfig(configFile: string): tslintTypes.Configuration.IConfigurationFile {
     const tslint: typeof tslintTypes = require('tslint');
 
     return tslint.Configuration.loadConfigurationFromPath(configFile);
@@ -104,7 +99,7 @@ class IncrementalChecker {
     );
   }
 
-  static createLinter(program: ts.Program) {
+  static createLinter(program: ts.Program): tslintTypes.Linter {
     const tslint: typeof tslintTypes = require('tslint');
 
     return new tslint.Linter({ fix: false }, program);
@@ -227,5 +222,3 @@ class IncrementalChecker {
     );
   }
 }
-
-export = IncrementalChecker;

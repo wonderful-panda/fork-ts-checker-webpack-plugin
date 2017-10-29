@@ -1,7 +1,7 @@
 
 import chalk = require('chalk');
 import os = require('os');
-import NormalizedMessage = require('../NormalizedMessage');
+import { NormalizedMessage } from '../NormalizedMessage';
 
 /**
  * Creates new default formatter.

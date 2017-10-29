@@ -1,18 +1,23 @@
 import ts = require('typescript');
+import tslint = require('tslint');
 
-interface DataShape {
+export interface FilesRegisterData {
   source: ts.SourceFile;
   linted: boolean;
-  lints: any[];
+  lints: tslint.RuleFailure[];
 }
 
-class FilesRegister {
-  files: { [filePath: string]: { mtime: number; data: DataShape; }};
-  dataFactory: (_data?: any) => DataShape; // It doesn't seem that the _data parameter is ever used?
+export class FilesRegister {
+  static EMPTY_DATA: FilesRegisterData = {
+    source: undefined,
+    linted: false,
+    lints: []
+  };
 
-  constructor(dataFactory: (_data?: any) => DataShape) {
+  files: { [filePath: string]: { mtime: number; data: FilesRegisterData; }};
+
+  constructor() {
     this.files = {};
-    this.dataFactory = dataFactory;
   }
 
   keys() {
@@ -22,7 +27,7 @@ class FilesRegister {
   add(filePath: string) {
     this.files[filePath] = {
       mtime: undefined,
-      data: this.dataFactory(undefined)
+      data: Object.assign({}, FilesRegister.EMPTY_DATA)
     };
   }
 
@@ -54,7 +59,7 @@ class FilesRegister {
     return this.get(filePath).data;
   }
 
-  mutateData(filePath: string, mutator: (data: DataShape) => void) {
+  mutateData(filePath: string, mutator: (data: FilesRegisterData) => void) {
     this.ensure(filePath);
 
     mutator(this.files[filePath].data);
@@ -70,8 +75,7 @@ class FilesRegister {
     if (this.files[filePath].mtime !== mtime) {
       this.files[filePath].mtime = mtime;
       // file has been changed - we have to reset data
-      this.files[filePath].data = this.dataFactory(this.files[filePath].data);
+      this.files[filePath].data = Object.assign({}, FilesRegister.EMPTY_DATA);
     }
   }
 }
-export = FilesRegister;

@@ -2,10 +2,10 @@
 import tsTypes = require('typescript');
 import tslintTypes = require('tslint');
 
-type ErrorType = 'diagnostic' | 'lint';
-type Severity = 'error' | 'warning';
+export type ErrorType = 'diagnostic' | 'lint';
+export type Severity = 'error' | 'warning';
 
-interface NormalizedMessageJson {
+export interface NormalizedMessageJson {
   type: ErrorType;
   code: string | number;
   severity: Severity;
@@ -15,7 +15,7 @@ interface NormalizedMessageJson {
   character: number;
 }
 
-class NormalizedMessage {
+export class NormalizedMessage {
   static TYPE_DIAGNOSTIC: ErrorType = 'diagnostic';
   static TYPE_LINT: ErrorType = 'lint';
 
@@ -208,5 +208,3 @@ class NormalizedMessage {
     return this.character;
   }
 }
-
-export = NormalizedMessage;
